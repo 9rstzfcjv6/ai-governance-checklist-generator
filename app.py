@@ -169,7 +169,11 @@ if st.session_state.checklist_generated:
 
     st.subheader("6. Governance Report")
 
-    report = generate_markdown_report(st.session_state.selected_system_type, checklist)
+    report = generate_markdown_report(
+        st.session_state.selected_system_type,
+        checklist,
+        checklist_df
+    )
 
     st.markdown(report)
 

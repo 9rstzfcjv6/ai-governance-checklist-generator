@@ -5,7 +5,7 @@ from checklist_engine import (
 )
 
 
-def generate_markdown_report(ai_system_type, checklist):
+def generate_markdown_report(ai_system_type, checklist, checklist_df=None):
     high_count, medium_count, low_count = calculate_risk_counts(checklist)
     governance_score = calculate_governance_score(checklist)
     overall_assessment = get_overall_governance_assessment(high_count, medium_count)
@@ -21,6 +21,40 @@ def generate_markdown_report(ai_system_type, checklist):
     report += f"- **Governance score:** {governance_score}\n"
     report += f"- **Overall assessment:** {overall_assessment}\n\n"
 
+    if checklist_df is not None and "Implementation Status" in checklist_df.columns:
+        implemented_count = checklist_df[
+            checklist_df["Implementation Status"] == "Implemented"
+        ].shape[0]
+
+        in_progress_count = checklist_df[
+            checklist_df["Implementation Status"] == "In Progress"
+        ].shape[0]
+
+        not_started_count = checklist_df[
+            checklist_df["Implementation Status"] == "Not Started"
+        ].shape[0]
+
+        not_applicable_count = checklist_df[
+            checklist_df["Implementation Status"] == "Not Applicable"
+        ].shape[0]
+
+        applicable_controls_count = len(checklist_df) - not_applicable_count
+
+        if applicable_controls_count > 0:
+            implementation_completion_rate = round(
+                implemented_count / applicable_controls_count * 100,
+                1
+            )
+        else:
+            implementation_completion_rate = 0
+
+        report += "## Implementation Progress Overview\n\n"
+        report += f"- **Implemented controls:** {implemented_count}\n"
+        report += f"- **Controls in progress:** {in_progress_count}\n"
+        report += f"- **Controls not started:** {not_started_count}\n"
+        report += f"- **Controls not applicable:** {not_applicable_count}\n"
+        report += f"- **Implementation completion rate:** {implementation_completion_rate}%\n\n"
+
     report += "## Governance Risk Overview\n\n"
     report += (
         "This section summarizes the governance attention required for the selected AI system type. "
@@ -29,26 +63,46 @@ def generate_markdown_report(ai_system_type, checklist):
     )
 
     report += "## Governance Checklist\n\n"
-    report += "| Category | Risk Level | Priority | Owner |\n"
-    report += "|---|---|---|---|\n"
 
-    for control in checklist:
-        report += (
-            f"| {control['category']} | "
-            f"{control['risk_level']} | "
-            f"{control['priority']} | "
-            f"{control['owner']} |\n"
-        )
+    if checklist_df is not None and "Implementation Status" in checklist_df.columns:
+        report += "| Category | Risk Level | Priority | Owner | Implementation Status |\n"
+        report += "|---|---|---|---|---|\n"
+
+        for _, row in checklist_df.iterrows():
+            report += (
+                f"| {row['Category']} | "
+                f"{row['Risk Level']} | "
+                f"{row['Priority']} | "
+                f"{row['Owner']} | "
+                f"{row['Implementation Status']} |\n"
+            )
+    else:
+        report += "| Category | Risk Level | Priority | Owner |\n"
+        report += "|---|---|---|---|\n"
+
+        for control in checklist:
+            report += (
+                f"| {control['category']} | "
+                f"{control['risk_level']} | "
+                f"{control['priority']} | "
+                f"{control['owner']} |\n"
+            )
 
     report += "\n"
 
     report += "## Detailed Recommended Controls\n\n"
 
     for index, control in enumerate(checklist, start=1):
+        implementation_status = "Not specified"
+
+        if checklist_df is not None and "Implementation Status" in checklist_df.columns:
+            implementation_status = checklist_df.iloc[index - 1]["Implementation Status"]
+
         report += f"### Control {index}: {control['category']}\n\n"
         report += f"- **Risk Level:** {control['risk_level']}\n"
         report += f"- **Priority:** {control['priority']}\n"
         report += f"- **Owner:** {control['owner']}\n"
+        report += f"- **Implementation Status:** {implementation_status}\n"
         report += f"- **Control Objective:** {control['control_objective']}\n"
         report += f"- **Recommended Control:** {control['recommended_control']}\n\n"
 
