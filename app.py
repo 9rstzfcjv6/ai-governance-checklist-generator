@@ -9,6 +9,7 @@ from checklist_engine import (
     get_overall_governance_assessment
 )
 from report_generator import generate_markdown_report
+from export import convert_markdown_to_docx_bytes
 
 st.set_page_config(
     page_title="AI Governance Checklist Generator",
@@ -120,4 +121,13 @@ if st.button("Generate governance checklist"):
         data=report,
         file_name="ai_governance_checklist_report.md",
         mime="text/markdown"
+    )
+
+    docx_report = convert_markdown_to_docx_bytes(report)
+
+    st.download_button(
+       label="Download governance report as DOCX",
+       data=docx_report,
+       file_name="ai_governance_checklist_report.docx",
+     mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     )
