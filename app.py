@@ -8,7 +8,7 @@ from checklist_engine import (
     calculate_governance_score,
     get_overall_governance_assessment
 )
-
+from report_generator import generate_markdown_report
 
 st.set_page_config(
     page_title="AI Governance Checklist Generator",
@@ -108,3 +108,16 @@ if st.button("Generate governance checklist"):
             st.markdown(f"**Risk Level:** {control['risk_level']}")
             st.markdown(f"**Owner:** {control['owner']}")
             st.markdown(f"**Priority:** {control['priority']}")
+
+    st.subheader("5. Governance Report")
+
+    report = generate_markdown_report(selected_system_type, checklist)
+
+    st.markdown(report)
+
+    st.download_button(
+        label="Download governance report as Markdown",
+        data=report,
+        file_name="ai_governance_checklist_report.md",
+        mime="text/markdown"
+    )
