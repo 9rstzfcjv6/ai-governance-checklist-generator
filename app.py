@@ -62,8 +62,18 @@ selected_system_type = st.selectbox(
     AI_SYSTEM_TYPES
 )
 
+if "checklist_generated" not in st.session_state:
+    st.session_state.checklist_generated = False
+
+if "selected_system_type" not in st.session_state:
+    st.session_state.selected_system_type = selected_system_type
+
 if st.button("Generate governance checklist"):
-    checklist = generate_checklist(selected_system_type)
+    st.session_state.checklist_generated = True
+    st.session_state.selected_system_type = selected_system_type
+
+if st.session_state.checklist_generated:
+    checklist = generate_checklist(st.session_state.selected_system_type)
 
     high_count, medium_count, low_count = calculate_risk_counts(checklist)
     governance_score = calculate_governance_score(checklist)
@@ -82,16 +92,28 @@ if st.button("Generate governance checklist"):
 
     st.markdown(f"**Overall assessment:** {overall_assessment}")
 
-    st.subheader("3. Governance Checklist")
+    st.subheader("3. Governance Checklist with Implementation Status")
 
     checklist_rows = []
 
-    for control in checklist:
+    for index, control in enumerate(checklist, start=1):
+        implementation_status = st.selectbox(
+            label=f"Implementation status for control {index}: {control['category']}",
+            options=[
+                "Not Started",
+                "In Progress",
+                "Implemented",
+                "Not Applicable"
+            ],
+            key=f"status_{index}_{st.session_state.selected_system_type}"
+        )
+
         checklist_rows.append({
             "Category": control["category"],
             "Risk Level": control["risk_level"],
             "Priority": control["priority"],
             "Owner": control["owner"],
+            "Implementation Status": implementation_status,
             "Control Objective": control["control_objective"],
             "Recommended Control": control["recommended_control"]
         })
@@ -100,7 +122,42 @@ if st.button("Generate governance checklist"):
 
     st.dataframe(checklist_df, use_container_width=True)
 
-    st.subheader("4. Detailed Controls")
+    st.subheader("4. Implementation Progress Overview")
+
+    implemented_count = checklist_df[
+        checklist_df["Implementation Status"] == "Implemented"
+    ].shape[0]
+
+    in_progress_count = checklist_df[
+        checklist_df["Implementation Status"] == "In Progress"
+    ].shape[0]
+
+    not_started_count = checklist_df[
+        checklist_df["Implementation Status"] == "Not Started"
+    ].shape[0]
+
+    not_applicable_count = checklist_df[
+        checklist_df["Implementation Status"] == "Not Applicable"
+    ].shape[0]
+
+    applicable_controls_count = len(checklist_df) - not_applicable_count
+
+    if applicable_controls_count > 0:
+        implementation_completion_rate = round(
+            implemented_count / applicable_controls_count * 100,
+            1
+        )
+    else:
+        implementation_completion_rate = 0
+
+    col1, col2, col3, col4 = st.columns(4)
+
+    col1.metric("Implemented", implemented_count)
+    col2.metric("In Progress", in_progress_count)
+    col3.metric("Not Started", not_started_count)
+    col4.metric("Completion Rate", f"{implementation_completion_rate}%")
+
+    st.subheader("5. Detailed Controls")
 
     for index, control in enumerate(checklist, start=1):
         with st.expander(f"{index}. {control['category']} — {control['risk_level']}"):
@@ -110,9 +167,9 @@ if st.button("Generate governance checklist"):
             st.markdown(f"**Owner:** {control['owner']}")
             st.markdown(f"**Priority:** {control['priority']}")
 
-    st.subheader("5. Governance Report")
+    st.subheader("6. Governance Report")
 
-    report = generate_markdown_report(selected_system_type, checklist)
+    report = generate_markdown_report(st.session_state.selected_system_type, checklist)
 
     st.markdown(report)
 
