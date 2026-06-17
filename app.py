@@ -22,10 +22,22 @@ st.set_page_config(
 
 st.markdown(
     """
-    # AI Governance Checklist Generator
-
-    **LegalTech / RegTech prototype for AI governance review, maturity assessment, gap analysis and risk register generation.**
-    """
+    <div class="hero-card">
+        <div class="eyebrow">LegalTech / RegTech Prototype</div>
+        <h1>AI Governance Checklist Generator</h1>
+        <p class="small-muted">
+            Enterprise-style prototype for AI governance reviews, maturity assessment,
+            gap analysis, risk register generation and exportable governance reports.
+        </p>
+        <div>
+            <span class="pill">AI Governance</span>
+            <span class="pill">Risk Register</span>
+            <span class="pill">Maturity Assessment</span>
+            <span class="pill">DOCX / CSV Export</span>
+        </div>
+    </div>
+    """,
+    unsafe_allow_html=True
 )
 
 st.markdown(
@@ -34,34 +46,93 @@ st.markdown(
     .block-container {
         padding-top: 2rem;
         padding-bottom: 3rem;
+        max-width: 1180px;
     }
 
-        div[data-testid="stMetric"] {
-            background-color: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            padding: 15px;
-            border-radius: 10px;
+    h1 {
+        letter-spacing: -0.04em;
+        color: #0F172A;
+        font-weight: 750;
     }
 
-        div[data-testid="stMetric"] label {
-            color: inherit;
+    h2, h3 {
+        color: #0F172A;
+        letter-spacing: -0.02em;
     }
 
-        div[data-testid="stMetricValue"] {
-            color: inherit;
+    .hero-card {
+        border: 1px solid #E2E8F0;
+        border-radius: 20px;
+        padding: 30px;
+        margin-bottom: 20px;
+        background: linear-gradient(135deg, #FFFFFF 0%, #F1F5F9 100%);
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
     }
 
     .section-card {
-        background-color: #ffffff;
-        border: 1px solid #e9ecef;
-        border-radius: 12px;
-        padding: 18px;
-        margin-bottom: 18px;
+        border: 1px solid #E2E8F0;
+        border-radius: 18px;
+        padding: 24px;
+        margin-top: 18px;
+        margin-bottom: 22px;
+        background-color: #FFFFFF;
+        box-shadow: 0 6px 20px rgba(15, 23, 42, 0.05);
+    }
+
+    .eyebrow {
+        color: #2563EB;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
     }
 
     .small-muted {
-        color: #6c757d;
-        font-size: 0.9rem;
+        color: #64748B;
+        font-size: 0.95rem;
+        line-height: 1.55;
+    }
+
+    .pill {
+        display: inline-block;
+        padding: 6px 12px;
+        margin-right: 6px;
+        margin-bottom: 6px;
+        border-radius: 999px;
+        background-color: #EFF6FF;
+        border: 1px solid #BFDBFE;
+        color: #1D4ED8;
+        font-size: 0.84rem;
+        font-weight: 600;
+    }
+
+    div[data-testid="stMetric"] {
+        background-color: #FFFFFF;
+        border: 1px solid #E2E8F0;
+        padding: 18px;
+        border-radius: 16px;
+        box-shadow: 0 6px 18px rgba(15, 23, 42, 0.05);
+    }
+
+    div[data-testid="stMetric"] label {
+        color: #64748B;
+        font-weight: 600;
+    }
+
+    div[data-testid="stMetricValue"] {
+        color: #0F172A;
+        font-weight: 750;
+    }
+
+    .section-divider {
+        margin-top: 2.5rem;
+        margin-bottom: 1.2rem;
+        border-top: 1px solid #E2E8F0;
+    }
+
+    section[data-testid="stSidebar"] {
+        background-color: #FFFFFF;
+        border-right: 1px solid #E2E8F0;
     }
     </style>
     """,
@@ -79,104 +150,136 @@ st.warning(
 )
 
 
-st.sidebar.title(" AI Governance Tool")
+
+st.sidebar.title("AI Governance")
 
 st.sidebar.markdown(
     """
-    **Prototype:** LegalTech / RegTech  
-    **Focus:** AI governance operations  
-    **Version:** v1.0  
-    **Built with:** Python + Streamlit
+    **Type:** LegalTech / RegTech  
+    **Mode:** Governance review  
+    **Version:** v1.1
     """
 )
 
 st.sidebar.markdown("---")
 
+st.sidebar.markdown("### Core outputs")
+
 st.sidebar.markdown(
     """
-    ### Outputs
-
     - Governance checklist
     - Gap analysis
-    - Maturity assessment
     - Risk register
-    - DOCX / Markdown reports
-    - CSV export
+    - Maturity assessment
+    - DOCX / CSV exports
     """
 )
 
 st.sidebar.markdown("---")
 
 st.sidebar.warning(
-    "Do not enter confidential, personal, sensitive or proprietary information."
+    "Public demo. Do not enter confidential or sensitive information."
 )
 
-
-st.subheader("1. AI System Classification")
-
-selected_system_type = st.selectbox(
-    "Choose the type of AI system to review:",
-    AI_SYSTEM_TYPES
+st.markdown(
+    """
+    <div class="section-card">
+        <div class="eyebrow">AI GOVERNANCE REVIEW WORKSPACE</div>
+        <h2 style="margin-top: 0.4rem;">Configure, assess and export an AI governance review</h2>
+        <p class="small-muted">
+            Select an AI system profile, generate operational governance controls,
+            track implementation status, identify governance gaps and export business-ready reports.
+        </p>
+    </div>
+    """,
+    unsafe_allow_html=True
 )
 
-st.subheader("2. AI System Metadata")
+st.subheader("Review Setup")
+st.markdown(
+    "Configure the AI system profile before generating the governance review."
+)
 
-with st.expander("Add AI system metadata", expanded=True):
-    ai_system_name = st.text_input(
-        "AI system name",
-        placeholder="Example: Clinical decision support prototype"
+setup_col1, setup_col2 = st.columns([1, 2])
+
+with setup_col1:
+    st.markdown("### AI System Classification")
+
+    selected_system_type = st.selectbox(
+        "Choose the type of AI system to review:",
+        AI_SYSTEM_TYPES
     )
 
-    business_unit = st.text_input(
-        "Business unit / department",
-        placeholder="Example: R&D, Legal, Product, HR, Compliance"
+    st.markdown(
+        """
+        <div class="small-muted">
+        The selected AI system type determines the baseline governance controls,
+        risk priorities and recommended review areas.
+        </div>
+        """,
+        unsafe_allow_html=True
     )
 
-    intended_use = st.text_area(
-        "Intended use",
-        placeholder="Describe how the AI system is expected to be used."
-    )
+with setup_col2:
+    st.markdown("### AI System Metadata")
 
-    deployment_stage = st.selectbox(
-        "Deployment stage",
-        [
-            "Idea / concept",
-            "Prototype",
-            "Internal testing",
-            "Pilot",
-            "Production",
-            "Post-deployment monitoring"
-        ]
-    )
+    with st.expander("Add AI system metadata", expanded=True):
+        ai_system_name = st.text_input(
+            "AI system name",
+            placeholder="Example: Clinical decision support prototype"
+        )
 
-    data_sensitivity = st.selectbox(
-        "Data sensitivity",
-        [
-            "Low",
-            "Medium",
-            "High",
-            "Sensitive personal data",
-            "Confidential business data"
-        ]
-    )
+        business_unit = st.text_input(
+            "Business unit / department",
+            placeholder="Example: R&D, Legal, Product, HR, Compliance"
+        )
 
-    provider_type = st.selectbox(
-        "Provider type",
-        [
-            "Internal model",
-            "External provider",
-            "Open-source model",
-            "Hybrid / multiple providers",
-            "Not determined"
-        ]
-    )
+        intended_use = st.text_area(
+            "Intended use",
+            placeholder="Describe how the AI system is expected to be used."
+        )
 
-    reviewer_name = st.text_input(
-        "Reviewer name",
-        placeholder="Example: Hugo Choiral"
-    )
+        deployment_stage = st.selectbox(
+            "Deployment stage",
+            [
+                "Idea / concept",
+                "Prototype",
+                "Internal testing",
+                "Pilot",
+                "Production",
+                "Post-deployment monitoring"
+            ]
+        )
 
-    review_date = st.date_input("Review date")
+        data_sensitivity = st.selectbox(
+            "Data sensitivity",
+            [
+                "Low",
+                "Medium",
+                "High",
+                "Sensitive personal data",
+                "Confidential business data"
+            ]
+        )
+
+        provider_type = st.selectbox(
+            "Provider type",
+            [
+                "Internal model",
+                "External provider",
+                "Open-source model",
+                "Hybrid / multiple providers",
+                "Not determined"
+            ]
+        )
+
+        reviewer_name = st.text_input(
+            "Reviewer name",
+            placeholder="Example: Hugo Choiral"
+        )
+
+        review_date = st.date_input("Review date")
+
 
 system_metadata = {
     "AI system name": ai_system_name,
@@ -210,9 +313,25 @@ if st.session_state.checklist_generated:
     governance_score = calculate_governance_score(checklist)
     overall_assessment = get_overall_governance_assessment(high_count, medium_count)
 
+    st.markdown('<div class="section-divider"></div>', unsafe_allow_html=True)
+
     st.success("AI governance review generated successfully.")
 
-    st.subheader("3. Governance Risk Overview")
+    st.markdown(
+        f"""
+        <div class="section-card">
+            <div class="eyebrow">GOVERNANCE REVIEW DASHBOARD</div>
+            <h2 style="margin-top: 0.4rem;">{st.session_state.selected_system_type}</h2>
+            <p class="small-muted">
+                Review generated from the selected AI system profile. Use the dashboard below
+                to assess risk exposure, implementation status, governance gaps and exportable outputs.
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    st.subheader("Governance Risk Snapshot")
 
     col1, col2, col3, col4 = st.columns(4)
 
@@ -223,7 +342,7 @@ if st.session_state.checklist_generated:
 
     st.markdown(f"**Overall assessment:** {overall_assessment}")
 
-    st.subheader("4. Governance Checklist & Implementation Status")
+    st.subheader("Control Implementation Tracker")
 
     checklist_rows = []
 
@@ -295,7 +414,7 @@ if st.session_state.checklist_generated:
         f"Showing {len(filtered_checklist_df)} of {len(checklist_df)} governance controls."
     )
 
-    st.subheader("5. Governance Gap Analysis")
+    st.subheader("Governance Gap Analysis")
 
     gap_counts = checklist_df["Governance Gap"].value_counts()
 
@@ -320,7 +439,7 @@ if st.session_state.checklist_generated:
             "No critical governance gaps identified based on the current implementation status."
         )
 
-    st.subheader("6. AI Governance Risk Register")
+    st.subheader("AI Governance Risk Register")
 
     risk_register_rows = []
 
@@ -349,7 +468,7 @@ if st.session_state.checklist_generated:
 
     st.dataframe(risk_register_df, use_container_width=True)
 
-    st.subheader("7. Implementation Progress Overview")
+    st.subheader("Implementation Progress & Maturity")
 
     implemented_count = checklist_df[
         checklist_df["Implementation Status"] == "Implemented"
@@ -399,7 +518,7 @@ if st.session_state.checklist_generated:
     for recommendation in action_plan_recommendations:
         st.markdown(f"- {recommendation}")
 
-    st.subheader("8. Detailed Controls")
+    st.subheader("Detailed Control Library")
 
     for index, control in enumerate(checklist, start=1):
         with st.expander(f"{index}. {control['category']} — {control['risk_level']}"):
@@ -409,7 +528,12 @@ if st.session_state.checklist_generated:
             st.markdown(f"**Owner:** {control['owner']}")
             st.markdown(f"**Priority:** {control['priority']}")
 
-    st.subheader("9. Governance Report & Exports")
+    st.subheader("Export Center")
+
+    st.markdown(
+        "Generate business-ready outputs for governance review, internal documentation, "
+        "compliance tracking or management reporting."
+    )
 
     report = generate_markdown_report(
         st.session_state.selected_system_type,
