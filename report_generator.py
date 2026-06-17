@@ -3,7 +3,8 @@ from checklist_engine import (
     calculate_governance_score,
     get_overall_governance_assessment,
     get_governance_maturity_level,
-    get_action_plan_recommendations
+    get_action_plan_recommendations,
+    get_executive_next_step
 )
 
 
@@ -26,8 +27,52 @@ def generate_markdown_report(
     report += f"- **Medium-risk controls:** {medium_count}\n"
     report += f"- **Low-risk controls:** {low_count}\n"
     report += f"- **Governance score:** {governance_score}\n"
-    report += f"- **Overall assessment:** {overall_assessment}\n\n"
-        
+    report += f"- **Overall governance attention level:** {overall_assessment}\n"   
+   
+    if checklist_df is not None and "Governance Gap" in checklist_df.columns:
+        critical_gap_count = checklist_df[
+            checklist_df["Governance Gap"] == "Critical governance gap"
+        ].shape[0]
+
+        immediate_action_count = checklist_df[
+            checklist_df["Governance Gap"] == "Immediate action required"
+        ].shape[0]
+
+        not_applicable_count = checklist_df[
+            checklist_df["Implementation Status"] == "Not Applicable"
+        ].shape[0]
+
+        applicable_controls_count = len(checklist_df) - not_applicable_count
+
+        implemented_count = checklist_df[
+            checklist_df["Implementation Status"] == "Implemented"
+        ].shape[0]
+
+        if applicable_controls_count > 0:
+            implementation_completion_rate = round(
+                implemented_count / applicable_controls_count * 100,
+                1
+            )
+        else:
+            implementation_completion_rate = 0
+
+        governance_maturity_level = get_governance_maturity_level(
+            implementation_completion_rate
+        )
+
+        executive_next_step = get_executive_next_step(
+            critical_gap_count,
+            immediate_action_count,
+            governance_maturity_level
+        )
+
+        report += f"- **Critical governance gaps:** {critical_gap_count}\n"
+        report += f"- **Immediate action items:** {immediate_action_count}\n"
+        report += f"- **Implementation completion rate:** {implementation_completion_rate}%\n"
+        report += f"- **Governance maturity level:** {governance_maturity_level}\n"
+        report += f"- **Recommended next step:** {executive_next_step}\n\n"
+    else:
+        report += f"- **Overall assessment:** {overall_assessment}\n\n"
     if system_metadata:
         report += "## AI System Metadata\n\n"
 

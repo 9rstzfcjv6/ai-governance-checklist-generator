@@ -122,3 +122,42 @@ def identify_governance_gap(control, implementation_status):
         return "Implementation in progress"
 
     return "Governance review recommended"
+
+def get_executive_next_step(
+    critical_gap_count,
+    immediate_action_count,
+    governance_maturity_level
+):
+    if critical_gap_count > 0:
+        return (
+            "Address critical governance gaps before deployment, external use or scaling."
+        )
+
+    if immediate_action_count > 0:
+        return (
+            "Prioritize immediate action items and assign accountable owners."
+        )
+
+    if governance_maturity_level == "Initial / Low Maturity":
+        return (
+            "Establish baseline governance controls and clarify ownership."
+        )
+
+    if governance_maturity_level == "Developing":
+        return (
+            "Formalize procedures, evidence collection and review workflows."
+        )
+
+    if governance_maturity_level == "Managed":
+        return (
+            "Strengthen monitoring, audit trails and periodic governance reviews."
+        )
+
+    if governance_maturity_level == "Mature":
+        return (
+            "Move toward continuous monitoring and external readiness review."
+        )
+
+    return (
+        "Review governance controls and define a risk-based improvement roadmap."
+    )
