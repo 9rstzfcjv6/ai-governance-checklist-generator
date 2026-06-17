@@ -63,20 +63,20 @@ st.markdown(
     .hero-card {
         border: 1px solid #E2E8F0;
         border-radius: 20px;
-        padding: 30px;
-        margin-bottom: 20px;
-        background: linear-gradient(135deg, #FFFFFF 0%, #F1F5F9 100%);
-        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+        padding: 26px 30px;
+        margin-bottom: 14px;
+        background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%);
+        box-shadow: 0 8px 22px rgba(15, 23, 42, 0.05);
     }
 
     .section-card {
         border: 1px solid #E2E8F0;
         border-radius: 18px;
-        padding: 24px;
-        margin-top: 18px;
-        margin-bottom: 22px;
+        padding: 22px 24px;
+        margin-top: 12px;
+        margin-bottom: 18px;
         background-color: #FFFFFF;
-        box-shadow: 0 6px 20px rgba(15, 23, 42, 0.05);
+        box-shadow: 0 5px 18px rgba(15, 23, 42, 0.045);
     }
 
     .eyebrow {
@@ -173,21 +173,23 @@ st.markdown(
     """
     <div class="section-card">
         <div class="eyebrow">Review Workspace</div>
-        <h2 style="margin-top: 0.4rem;">Configure the AI governance review</h2>
-        <p class="small-muted">
-            Select the AI system type, add optional metadata and generate a governance dashboard.
+        <h2 style="margin-top: 0.2rem; margin-bottom: 0.4rem;">
+            Configure the AI governance review
+        </h2>
+        <p class="small-muted" style="margin-bottom: 0;">
+            Select the system type, add metadata and generate a governance dashboard.
         </p>
     </div>
     """,
     unsafe_allow_html=True
 )
 
-st.subheader("Review Setup")
+st.markdown("### Review Setup")
 
 setup_col1, setup_col2 = st.columns([1, 2])
 
 with setup_col1:
-    st.markdown("### AI System Classification")
+    st.markdown("#### AI System Classification")
 
     selected_system_type = st.selectbox(
         "Choose the type of AI system to review:",
@@ -196,16 +198,15 @@ with setup_col1:
 
     st.markdown(
         """
-        <div class="small-muted">
-        The selected AI system type determines the baseline governance controls,
-        risk priorities and recommended review areas.
+        <div class="small-muted" style="margin-top: 0.75rem;">
+        Determines the baseline control library, risk scoring and recommended governance review areas.
         </div>
         """,
         unsafe_allow_html=True
     )
 
 with setup_col2:
-    st.markdown("### AI System Metadata")
+    st.markdown("#### AI System Metadata")
 
     with st.expander("Add AI system metadata", expanded=True):
         ai_system_name = st.text_input(
