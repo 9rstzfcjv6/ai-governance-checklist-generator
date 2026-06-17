@@ -6,7 +6,9 @@ The project translates AI governance concerns into practical control requirement
 
 ## Live Demo
 
-Deployment link to be added after Streamlit deployment.
+You can access the public demo here:
+
+https://ai-governance-checklist-generator-w5m7gussinnbsetec5ddy7.streamlit.app/
 
 ## Project Overview
 
