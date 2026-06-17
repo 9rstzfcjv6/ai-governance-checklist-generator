@@ -10,6 +10,10 @@ You can access the public demo here:
 
 https://ai-governance-checklist-generator-w5m7gussinnbsetec5ddy7.streamlit.app/
 
+## Screenshot
+
+![AI Governance Checklist Generator dashboard](assets/dashboard_screenshot.png)
+
 ## Project Overview
 
 This tool supports early-stage AI governance reviews by generating structured governance outputs based on the type of AI system being assessed.
