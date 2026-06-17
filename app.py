@@ -20,52 +20,106 @@ st.set_page_config(
 )
 
 
-st.title("AI Governance Checklist Generator")
+st.markdown(
+    """
+    # AI Governance Checklist Generator
 
-st.warning(
-    "This public demo is for educational and portfolio purposes only. "
-    "It does not provide legal advice or regulatory compliance certification. "
-    "Do not enter confidential, personal, sensitive or proprietary information."
-)
-
-st.caption(
-    "A rule-based AI governance prototype for generating operational control checklists "
-    "based on AI system type."
+    **LegalTech / RegTech prototype for AI governance review, maturity assessment, gap analysis and risk register generation.**
+    """
 )
 
 st.markdown(
     """
-    This tool helps translate AI governance concerns into practical control requirements
-    across areas such as data governance, transparency, human oversight, documentation,
-    monitoring, vendor risk and IP/data use.
-    """
+    <style>
+    .block-container {
+        padding-top: 2rem;
+        padding-bottom: 3rem;
+    }
+
+        div[data-testid="stMetric"] {
+            background-color: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 15px;
+            border-radius: 10px;
+    }
+
+        div[data-testid="stMetric"] label {
+            color: inherit;
+    }
+
+        div[data-testid="stMetricValue"] {
+            color: inherit;
+    }
+
+    .section-card {
+        background-color: #ffffff;
+        border: 1px solid #e9ecef;
+        border-radius: 12px;
+        padding: 18px;
+        margin-bottom: 18px;
+    }
+
+    .small-muted {
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+st.info(
+    "This tool helps translate AI governance concerns into practical control requirements, "
+    "implementation tracking, maturity assessment, gap analysis and exportable reports."
+)
+
+st.warning(
+    "Public demo only. Do not enter confidential, personal, sensitive or proprietary information. "
+    "This prototype does not provide legal advice or regulatory compliance certification."
 )
 
 
-st.sidebar.title("AI Governance Checklist Generator")
+st.sidebar.title(" AI Governance Tool")
+
 st.sidebar.markdown(
     """
-    **Prototype type:** AI Governance / LegalTech / RegTech  
-    **Focus:** operational governance controls for AI systems  
-    **Version:** v0.2
+    **Prototype:** LegalTech / RegTech  
+    **Focus:** AI governance operations  
+    **Version:** v1.0  
+    **Built with:** Python + Streamlit
+    """
+)
+
+st.sidebar.markdown("---")
+
+st.sidebar.markdown(
+    """
+    ### Outputs
+
+    - Governance checklist
+    - Gap analysis
+    - Maturity assessment
+    - Risk register
+    - DOCX / Markdown reports
+    - CSV export
     """
 )
 
 st.sidebar.markdown("---")
 
 st.sidebar.warning(
-    "Public demo only. Do not enter confidential, personal or sensitive information."
+    "Do not enter confidential, personal, sensitive or proprietary information."
 )
 
 
-st.subheader("1. Select AI System Type")
+st.subheader("1. AI System Classification")
 
 selected_system_type = st.selectbox(
     "Choose the type of AI system to review:",
     AI_SYSTEM_TYPES
 )
 
-st.subheader("1.1 AI System Metadata")
+st.subheader("2. AI System Metadata")
 
 with st.expander("Add AI system metadata", expanded=True):
     ai_system_name = st.text_input(
@@ -144,7 +198,7 @@ if "selected_system_type" not in st.session_state:
 if "system_metadata" not in st.session_state:
     st.session_state.system_metadata = system_metadata
 
-if st.button("Generate governance checklist"):
+if st.button("Generate AI governance review"):
     st.session_state.checklist_generated = True
     st.session_state.selected_system_type = selected_system_type
     st.session_state.system_metadata = system_metadata
@@ -156,9 +210,9 @@ if st.session_state.checklist_generated:
     governance_score = calculate_governance_score(checklist)
     overall_assessment = get_overall_governance_assessment(high_count, medium_count)
 
-    st.success("Governance checklist generated.")
+    st.success("AI governance review generated successfully.")
 
-    st.subheader("2. Governance Risk Overview")
+    st.subheader("3. Governance Risk Overview")
 
     col1, col2, col3, col4 = st.columns(4)
 
@@ -169,7 +223,7 @@ if st.session_state.checklist_generated:
 
     st.markdown(f"**Overall assessment:** {overall_assessment}")
 
-    st.subheader("3. Governance Checklist with Implementation Status")
+    st.subheader("4. Governance Checklist & Implementation Status")
 
     checklist_rows = []
 
@@ -241,7 +295,7 @@ if st.session_state.checklist_generated:
         f"Showing {len(filtered_checklist_df)} of {len(checklist_df)} governance controls."
     )
 
-    st.subheader("4. Governance Gap Analysis")
+    st.subheader("5. Governance Gap Analysis")
 
     gap_counts = checklist_df["Governance Gap"].value_counts()
 
@@ -266,7 +320,7 @@ if st.session_state.checklist_generated:
             "No critical governance gaps identified based on the current implementation status."
         )
 
-    st.subheader("5. AI Governance Risk Register")
+    st.subheader("6. AI Governance Risk Register")
 
     risk_register_rows = []
 
@@ -295,7 +349,7 @@ if st.session_state.checklist_generated:
 
     st.dataframe(risk_register_df, use_container_width=True)
 
-    st.subheader("6. Implementation Progress Overview")
+    st.subheader("7. Implementation Progress Overview")
 
     implemented_count = checklist_df[
         checklist_df["Implementation Status"] == "Implemented"
@@ -345,7 +399,7 @@ if st.session_state.checklist_generated:
     for recommendation in action_plan_recommendations:
         st.markdown(f"- {recommendation}")
 
-    st.subheader("7. Detailed Controls")
+    st.subheader("8. Detailed Controls")
 
     for index, control in enumerate(checklist, start=1):
         with st.expander(f"{index}. {control['category']} — {control['risk_level']}"):
@@ -355,7 +409,7 @@ if st.session_state.checklist_generated:
             st.markdown(f"**Owner:** {control['owner']}")
             st.markdown(f"**Priority:** {control['priority']}")
 
-    st.subheader("8. Governance Report")
+    st.subheader("9. Governance Report & Exports")
 
     report = generate_markdown_report(
         st.session_state.selected_system_type,
