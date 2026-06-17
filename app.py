@@ -557,14 +557,12 @@ if st.session_state.checklist_generated:
     )
 
     for index, control in enumerate(checklist, start=1):
-        with st.expander(f"{index}. {control['category']} — {control['risk_level']}"):
+        with st.expander(f"{index}. {control['category']}"):
             st.markdown(f"**Control Objective:** {control['control_objective']}")
             st.markdown(f"**Recommended Control:** {control['recommended_control']}")
             st.markdown(f"**Risk Level:** {control['risk_level']}")
             st.markdown(f"**Owner:** {control['owner']}")
             st.markdown(f"**Priority:** {control['priority']}")
-
-    st.subheader("Export Center")
 
     st.markdown('<div class="section-divider"></div>', unsafe_allow_html=True)
 
