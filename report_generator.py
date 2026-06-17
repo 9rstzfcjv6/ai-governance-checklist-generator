@@ -7,7 +7,12 @@ from checklist_engine import (
 )
 
 
-def generate_markdown_report(ai_system_type, checklist, checklist_df=None):
+def generate_markdown_report(
+    ai_system_type,
+    checklist,
+    checklist_df=None,
+    system_metadata=None
+):
     high_count, medium_count, low_count = calculate_risk_counts(checklist)
     governance_score = calculate_governance_score(checklist)
     overall_assessment = get_overall_governance_assessment(high_count, medium_count)
@@ -22,6 +27,15 @@ def generate_markdown_report(ai_system_type, checklist, checklist_df=None):
     report += f"- **Low-risk controls:** {low_count}\n"
     report += f"- **Governance score:** {governance_score}\n"
     report += f"- **Overall assessment:** {overall_assessment}\n\n"
+        
+    if system_metadata:
+        report += "## AI System Metadata\n\n"
+
+        for key, value in system_metadata.items():
+            if value:
+                report += f"- **{key}:** {value}\n"
+
+        report += "\n"
 
     if checklist_df is not None and "Implementation Status" in checklist_df.columns:
         implemented_count = checklist_df[

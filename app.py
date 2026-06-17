@@ -64,15 +64,89 @@ selected_system_type = st.selectbox(
     AI_SYSTEM_TYPES
 )
 
+st.subheader("1.1 AI System Metadata")
+
+with st.expander("Add AI system metadata", expanded=True):
+    ai_system_name = st.text_input(
+        "AI system name",
+        placeholder="Example: Clinical decision support prototype"
+    )
+
+    business_unit = st.text_input(
+        "Business unit / department",
+        placeholder="Example: R&D, Legal, Product, HR, Compliance"
+    )
+
+    intended_use = st.text_area(
+        "Intended use",
+        placeholder="Describe how the AI system is expected to be used."
+    )
+
+    deployment_stage = st.selectbox(
+        "Deployment stage",
+        [
+            "Idea / concept",
+            "Prototype",
+            "Internal testing",
+            "Pilot",
+            "Production",
+            "Post-deployment monitoring"
+        ]
+    )
+
+    data_sensitivity = st.selectbox(
+        "Data sensitivity",
+        [
+            "Low",
+            "Medium",
+            "High",
+            "Sensitive personal data",
+            "Confidential business data"
+        ]
+    )
+
+    provider_type = st.selectbox(
+        "Provider type",
+        [
+            "Internal model",
+            "External provider",
+            "Open-source model",
+            "Hybrid / multiple providers",
+            "Not determined"
+        ]
+    )
+
+    reviewer_name = st.text_input(
+        "Reviewer name",
+        placeholder="Example: Hugo Choiral"
+    )
+
+    review_date = st.date_input("Review date")
+
+system_metadata = {
+    "AI system name": ai_system_name,
+    "Business unit": business_unit,
+    "Intended use": intended_use,
+    "Deployment stage": deployment_stage,
+    "Data sensitivity": data_sensitivity,
+    "Provider type": provider_type,
+    "Reviewer name": reviewer_name,
+    "Review date": str(review_date)
+}
+
 if "checklist_generated" not in st.session_state:
     st.session_state.checklist_generated = False
 
 if "selected_system_type" not in st.session_state:
     st.session_state.selected_system_type = selected_system_type
 
+if "system_metadata" not in st.session_state:
+    st.session_state.system_metadata = system_metadata
+
 if st.button("Generate governance checklist"):
     st.session_state.checklist_generated = True
     st.session_state.selected_system_type = selected_system_type
+    st.session_state.system_metadata = system_metadata
 
 if st.session_state.checklist_generated:
     checklist = generate_checklist(st.session_state.selected_system_type)
@@ -189,7 +263,8 @@ if st.session_state.checklist_generated:
     report = generate_markdown_report(
         st.session_state.selected_system_type,
         checklist,
-        checklist_df
+        checklist_df,
+        st.session_state.system_metadata
     )
 
     st.markdown(report)
