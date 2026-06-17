@@ -284,6 +284,15 @@ if st.session_state.checklist_generated:
 
     risk_register_df = pd.DataFrame(risk_register_rows)
 
+    risk_register_csv = risk_register_df.to_csv(index=False).encode("utf-8")
+
+    st.download_button(
+        label="Download risk register as CSV",
+        data=risk_register_csv,
+        file_name="ai_governance_risk_register.csv",
+        mime="text/csv"
+    )
+
     st.dataframe(risk_register_df, use_container_width=True)
 
     st.subheader("6. Implementation Progress Overview")
