@@ -540,7 +540,21 @@ if st.session_state.checklist_generated:
     for recommendation in action_plan_recommendations:
         st.markdown(f"- {recommendation}")
 
-    st.subheader("Detailed Control Library")
+    st.markdown('<div class="section-divider"></div>', unsafe_allow_html=True)
+
+    st.markdown(
+        """
+        <div class="section-card">
+            <div class="eyebrow">Control Library</div>
+            <h2 style="margin-top: 0.4rem;">Detailed governance controls</h2>
+            <p class="small-muted">
+                Expand each control to review the control objective, recommended implementation,
+                owner, risk level and priority.
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
     for index, control in enumerate(checklist, start=1):
         with st.expander(f"{index}. {control['category']} — {control['risk_level']}"):
@@ -567,6 +581,28 @@ if st.session_state.checklist_generated:
         """,
         unsafe_allow_html=True
     )
+
+    export_col1, export_col2 = st.columns([2, 1])
+
+    with export_col1:
+        st.markdown(
+            """
+            **Available exports**
+
+            - Markdown governance report
+            - DOCX governance report
+            - CSV AI governance risk register
+            """
+        )
+
+    with export_col2:
+        st.markdown(
+            """
+            **Typical use**
+
+            Internal review, compliance tracking, management reporting and portfolio demonstration.
+            """
+        )
 
     report = generate_markdown_report(
         st.session_state.selected_system_type,
