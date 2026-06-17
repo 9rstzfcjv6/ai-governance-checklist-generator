@@ -1,7 +1,9 @@
 from checklist_engine import (
     calculate_risk_counts,
     calculate_governance_score,
-    get_overall_governance_assessment
+    get_overall_governance_assessment,
+    get_governance_maturity_level,
+    get_action_plan_recommendations
 )
 
 
@@ -53,7 +55,22 @@ def generate_markdown_report(ai_system_type, checklist, checklist_df=None):
         report += f"- **Controls in progress:** {in_progress_count}\n"
         report += f"- **Controls not started:** {not_started_count}\n"
         report += f"- **Controls not applicable:** {not_applicable_count}\n"
-        report += f"- **Implementation completion rate:** {implementation_completion_rate}%\n\n"
+        governance_maturity_level = get_governance_maturity_level(
+              implementation_completion_rate
+        )
+
+        report += f"- **Implementation completion rate:** {implementation_completion_rate}%\n"
+        report += f"- **Governance maturity level:** {governance_maturity_level}\n\n"
+        action_plan_recommendations = get_action_plan_recommendations(
+            governance_maturity_level
+        )
+
+        report += "## Recommended Action Plan\n\n"
+
+        for recommendation in action_plan_recommendations:
+            report += f"- {recommendation}\n"
+
+        report += "\n"
 
     report += "## Governance Risk Overview\n\n"
     report += (

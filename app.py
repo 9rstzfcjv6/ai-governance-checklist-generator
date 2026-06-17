@@ -6,7 +6,9 @@ from checklist_engine import (
     generate_checklist,
     calculate_risk_counts,
     calculate_governance_score,
-    get_overall_governance_assessment
+    get_overall_governance_assessment,
+    get_governance_maturity_level,
+    get_action_plan_recommendations
 )
 from report_generator import generate_markdown_report
 from export import convert_markdown_to_docx_bytes
@@ -156,6 +158,21 @@ if st.session_state.checklist_generated:
     col2.metric("In Progress", in_progress_count)
     col3.metric("Not Started", not_started_count)
     col4.metric("Completion Rate", f"{implementation_completion_rate}%")
+
+    governance_maturity_level = get_governance_maturity_level(
+        implementation_completion_rate
+    )
+
+    st.markdown(f"**Governance maturity level:** {governance_maturity_level}")
+
+    action_plan_recommendations = get_action_plan_recommendations(
+        governance_maturity_level
+    )
+
+    st.markdown("**Recommended action plan:**")
+
+    for recommendation in action_plan_recommendations:
+        st.markdown(f"- {recommendation}")
 
     st.subheader("5. Detailed Controls")
 

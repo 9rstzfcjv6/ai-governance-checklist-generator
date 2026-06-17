@@ -46,3 +46,52 @@ def get_overall_governance_assessment(high_count, medium_count):
         return "Moderate governance controls recommended."
 
     return "Low governance concern based on current checklist."
+
+def get_governance_maturity_level(completion_rate):
+    if completion_rate <= 25:
+        return "Initial / Low Maturity"
+
+    if completion_rate <= 50:
+        return "Developing"
+
+    if completion_rate <= 75:
+        return "Managed"
+
+    return "Mature"
+
+def get_action_plan_recommendations(governance_maturity_level):
+    if governance_maturity_level == "Initial / Low Maturity":
+        return [
+            "Prioritize urgent and high-risk governance controls before deployment or external use.",
+            "Assign clear control owners across Legal, Compliance, Product, Data and R&D teams.",
+            "Create a baseline AI system inventory and document current governance gaps.",
+            "Define minimum internal rules for data use, human oversight and documentation."
+        ]
+
+    if governance_maturity_level == "Developing":
+        return [
+            "Formalize internal AI governance procedures and approval workflows.",
+            "Start collecting evidence of control implementation for future audits or reviews.",
+            "Improve documentation around data sources, model limitations, intended use and human review.",
+            "Define escalation paths for incidents, unexpected outputs or high-risk use cases."
+        ]
+
+    if governance_maturity_level == "Managed":
+        return [
+            "Strengthen audit trails and periodic review processes.",
+            "Establish recurring cross-functional AI governance meetings.",
+            "Monitor performance, bias, security and operational risks over time.",
+            "Prepare governance documentation for external due diligence or regulatory review."
+        ]
+
+    if governance_maturity_level == "Mature":
+        return [
+            "Move toward continuous monitoring of AI governance KPIs.",
+            "Benchmark governance controls against emerging standards and sector practices.",
+            "Prepare for external assurance, certification or independent review where relevant.",
+            "Use governance data to support strategic AI deployment and risk-based scaling."
+        ]
+
+    return [
+        "Review the AI system governance profile and define next-step actions based on risk level and implementation status."
+    ]
