@@ -139,18 +139,6 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-st.info(
-    "This tool helps translate AI governance concerns into practical control requirements, "
-    "implementation tracking, maturity assessment, gap analysis and exportable reports."
-)
-
-st.warning(
-    "Public demo only. Do not enter confidential, personal, sensitive or proprietary information. "
-    "This prototype does not provide legal advice or regulatory compliance certification."
-)
-
-
-
 st.sidebar.title("AI Governance")
 
 st.sidebar.markdown(
@@ -184,11 +172,10 @@ st.sidebar.warning(
 st.markdown(
     """
     <div class="section-card">
-        <div class="eyebrow">AI GOVERNANCE REVIEW WORKSPACE</div>
-        <h2 style="margin-top: 0.4rem;">Configure, assess and export an AI governance review</h2>
+        <div class="eyebrow">Review Workspace</div>
+        <h2 style="margin-top: 0.4rem;">Configure the AI governance review</h2>
         <p class="small-muted">
-            Select an AI system profile, generate operational governance controls,
-            track implementation status, identify governance gaps and export business-ready reports.
+            Select the AI system type, add optional metadata and generate a governance dashboard.
         </p>
     </div>
     """,
@@ -196,9 +183,6 @@ st.markdown(
 )
 
 st.subheader("Review Setup")
-st.markdown(
-    "Configure the AI system profile before generating the governance review."
-)
 
 setup_col1, setup_col2 = st.columns([1, 2])
 
@@ -530,9 +514,20 @@ if st.session_state.checklist_generated:
 
     st.subheader("Export Center")
 
+    st.markdown('<div class="section-divider"></div>', unsafe_allow_html=True)
+
     st.markdown(
-        "Generate business-ready outputs for governance review, internal documentation, "
-        "compliance tracking or management reporting."
+        """
+        <div class="section-card">
+            <div class="eyebrow">Export Center</div>
+            <h2 style="margin-top: 0.4rem;">Generate governance deliverables</h2>
+            <p class="small-muted">
+                Export the governance review as Markdown, DOCX or CSV for internal documentation,
+                compliance tracking, risk register management or portfolio demonstration.
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True
     )
 
     report = generate_markdown_report(
