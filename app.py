@@ -196,7 +196,46 @@ if st.session_state.checklist_generated:
 
     checklist_df = pd.DataFrame(checklist_rows)
 
-    st.dataframe(checklist_df, use_container_width=True)
+    st.markdown("### Filter governance controls")
+
+    filter_col1, filter_col2, filter_col3, filter_col4 = st.columns(4)
+
+    risk_level_filter = filter_col1.multiselect(
+        "Filter by risk level",
+        options=sorted(checklist_df["Risk Level"].unique()),
+        default=sorted(checklist_df["Risk Level"].unique())
+    )
+
+    priority_filter = filter_col2.multiselect(
+        "Filter by priority",
+        options=sorted(checklist_df["Priority"].unique()),
+        default=sorted(checklist_df["Priority"].unique())
+    )
+
+    status_filter = filter_col3.multiselect(
+        "Filter by implementation status",
+        options=sorted(checklist_df["Implementation Status"].unique()),
+        default=sorted(checklist_df["Implementation Status"].unique())
+    )
+
+    owner_filter = filter_col4.multiselect(
+        "Filter by owner",
+        options=sorted(checklist_df["Owner"].unique()),
+        default=sorted(checklist_df["Owner"].unique())
+    )
+
+    filtered_checklist_df = checklist_df[
+        checklist_df["Risk Level"].isin(risk_level_filter)
+        & checklist_df["Priority"].isin(priority_filter)
+        & checklist_df["Implementation Status"].isin(status_filter)
+        & checklist_df["Owner"].isin(owner_filter)
+    ]
+
+    st.dataframe(filtered_checklist_df, use_container_width=True)
+
+    st.caption(
+        f"Showing {len(filtered_checklist_df)} of {len(checklist_df)} governance controls."
+    )
 
     st.subheader("4. Implementation Progress Overview")
 
