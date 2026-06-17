@@ -95,3 +95,30 @@ def get_action_plan_recommendations(governance_maturity_level):
     return [
         "Review the AI system governance profile and define next-step actions based on risk level and implementation status."
     ]
+
+def identify_governance_gap(control, implementation_status):
+    risk_level = control["risk_level"]
+    priority = control["priority"]
+
+    if implementation_status == "Not Applicable":
+        return "Not applicable"
+
+    if risk_level == "High" and implementation_status == "Not Started":
+        return "Critical governance gap"
+
+    if priority == "Urgent" and implementation_status == "Not Started":
+        return "Immediate action required"
+
+    if risk_level == "High" and implementation_status == "In Progress":
+        return "Active remediation needed"
+
+    if risk_level == "Medium" and implementation_status == "Not Started":
+        return "Planned governance improvement"
+
+    if implementation_status == "Implemented":
+        return "Control implemented"
+
+    if implementation_status == "In Progress":
+        return "Implementation in progress"
+
+    return "Governance review recommended"

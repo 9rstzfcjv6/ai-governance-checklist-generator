@@ -8,7 +8,8 @@ from checklist_engine import (
     calculate_governance_score,
     get_overall_governance_assessment,
     get_governance_maturity_level,
-    get_action_plan_recommendations
+    get_action_plan_recommendations,
+    identify_governance_gap
 )
 from report_generator import generate_markdown_report
 from export import convert_markdown_to_docx_bytes
@@ -184,12 +185,15 @@ if st.session_state.checklist_generated:
             key=f"status_{index}_{st.session_state.selected_system_type}"
         )
 
+        governance_gap = identify_governance_gap(control, implementation_status)
+
         checklist_rows.append({
             "Category": control["category"],
             "Risk Level": control["risk_level"],
             "Priority": control["priority"],
             "Owner": control["owner"],
             "Implementation Status": implementation_status,
+            "Governance Gap": governance_gap,
             "Control Objective": control["control_objective"],
             "Recommended Control": control["recommended_control"]
         })
@@ -237,7 +241,32 @@ if st.session_state.checklist_generated:
         f"Showing {len(filtered_checklist_df)} of {len(checklist_df)} governance controls."
     )
 
-    st.subheader("4. Implementation Progress Overview")
+    st.subheader("4. Governance Gap Analysis")
+
+    gap_counts = checklist_df["Governance Gap"].value_counts()
+
+    for gap_label, gap_count in gap_counts.items():
+        st.markdown(f"- **{gap_label}:** {gap_count}")
+
+    critical_gap_count = checklist_df[
+        checklist_df["Governance Gap"] == "Critical governance gap"
+    ].shape[0]
+
+    immediate_action_count = checklist_df[
+        checklist_df["Governance Gap"] == "Immediate action required"
+    ].shape[0]
+
+    if critical_gap_count > 0 or immediate_action_count > 0:
+        st.error(
+            "Critical governance gaps or immediate action items were identified. "
+            "These should be addressed before deployment, external use or scaling."
+        )
+    else:
+        st.success(
+            "No critical governance gaps identified based on the current implementation status."
+        )
+
+    st.subheader("5. Implementation Progress Overview")
 
     implemented_count = checklist_df[
         checklist_df["Implementation Status"] == "Implemented"
@@ -287,7 +316,7 @@ if st.session_state.checklist_generated:
     for recommendation in action_plan_recommendations:
         st.markdown(f"- {recommendation}")
 
-    st.subheader("5. Detailed Controls")
+    st.subheader("6. Detailed Controls")
 
     for index, control in enumerate(checklist, start=1):
         with st.expander(f"{index}. {control['category']} — {control['risk_level']}"):
@@ -297,7 +326,7 @@ if st.session_state.checklist_generated:
             st.markdown(f"**Owner:** {control['owner']}")
             st.markdown(f"**Priority:** {control['priority']}")
 
-    st.subheader("6. Governance Report")
+    st.subheader("7. Governance Report")
 
     report = generate_markdown_report(
         st.session_state.selected_system_type,

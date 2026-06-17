@@ -105,11 +105,12 @@ def generate_markdown_report(
                 f"{row['Risk Level']} | "
                 f"{row['Priority']} | "
                 f"{row['Owner']} | "
-                f"{row['Implementation Status']} |\n"
+                f"{row['Implementation Status']} | "
+                f"{row['Governance Gap']} |\n"
             )
     else:
-        report += "| Category | Risk Level | Priority | Owner |\n"
-        report += "|---|---|---|---|\n"
+        report += "| Category | Risk Level | Priority | Owner | Implementation Status | Governance Gap |\n"
+        report += "|---|---|---|---|---|---|\n"
 
         for control in checklist:
             report += (
@@ -134,6 +135,12 @@ def generate_markdown_report(
         report += f"- **Priority:** {control['priority']}\n"
         report += f"- **Owner:** {control['owner']}\n"
         report += f"- **Implementation Status:** {implementation_status}\n"
+        governance_gap = "Not specified"
+
+        if checklist_df is not None and "Governance Gap" in checklist_df.columns:
+            governance_gap = checklist_df.iloc[index - 1]["Governance Gap"]
+
+        report += f"- **Governance Gap:** {governance_gap}\n"
         report += f"- **Control Objective:** {control['control_objective']}\n"
         report += f"- **Recommended Control:** {control['recommended_control']}\n\n"
 
