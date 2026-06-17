@@ -138,6 +138,25 @@ def generate_markdown_report(
         "and internal accountability measures should be implemented before deployment or operational use.\n\n"
     )
 
+    if checklist_df is not None and "Governance Gap" in checklist_df.columns:
+        report += "## AI Governance Risk Register\n\n"
+        report += "| Risk ID | Category | Risk Level | Priority | Owner | Implementation Status | Governance Gap | Recommended Control |\n"
+        report += "|---|---|---|---|---|---|---|---|\n"
+
+        for index, row in checklist_df.iterrows():
+            report += (
+                f"| AI-GOV-{index + 1:03d} | "
+                f"{row['Category']} | "
+                f"{row['Risk Level']} | "
+                f"{row['Priority']} | "
+                f"{row['Owner']} | "
+                f"{row['Implementation Status']} | "
+                f"{row['Governance Gap']} | "
+                f"{row['Recommended Control']} |\n"
+            )
+
+        report += "\n"
+        
     report += "## Governance Checklist\n\n"
 
     if checklist_df is not None and "Implementation Status" in checklist_df.columns:

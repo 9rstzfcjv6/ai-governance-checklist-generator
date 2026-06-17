@@ -266,7 +266,27 @@ if st.session_state.checklist_generated:
             "No critical governance gaps identified based on the current implementation status."
         )
 
-    st.subheader("5. Implementation Progress Overview")
+    st.subheader("5. AI Governance Risk Register")
+
+    risk_register_rows = []
+
+    for index, row in checklist_df.iterrows():
+        risk_register_rows.append({
+            "Risk ID": f"AI-GOV-{index + 1:03d}",
+            "Category": row["Category"],
+            "Risk Level": row["Risk Level"],
+            "Priority": row["Priority"],
+            "Owner": row["Owner"],
+            "Implementation Status": row["Implementation Status"],
+            "Governance Gap": row["Governance Gap"],
+            "Recommended Control": row["Recommended Control"]
+        })
+
+    risk_register_df = pd.DataFrame(risk_register_rows)
+
+    st.dataframe(risk_register_df, use_container_width=True)
+
+    st.subheader("6. Implementation Progress Overview")
 
     implemented_count = checklist_df[
         checklist_df["Implementation Status"] == "Implemented"
@@ -316,7 +336,7 @@ if st.session_state.checklist_generated:
     for recommendation in action_plan_recommendations:
         st.markdown(f"- {recommendation}")
 
-    st.subheader("6. Detailed Controls")
+    st.subheader("7. Detailed Controls")
 
     for index, control in enumerate(checklist, start=1):
         with st.expander(f"{index}. {control['category']} — {control['risk_level']}"):
@@ -326,7 +346,7 @@ if st.session_state.checklist_generated:
             st.markdown(f"**Owner:** {control['owner']}")
             st.markdown(f"**Priority:** {control['priority']}")
 
-    st.subheader("7. Governance Report")
+    st.subheader("8. Governance Report")
 
     report = generate_markdown_report(
         st.session_state.selected_system_type,
