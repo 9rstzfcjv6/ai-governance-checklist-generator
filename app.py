@@ -186,14 +186,39 @@ st.markdown(
 
 st.markdown("### Review Setup")
 
+if "demo_mode" not in st.session_state:
+    st.session_state.demo_mode = False
+
+if st.session_state.demo_mode:
+    default_ai_system_name = "Medical Imaging Triage Assistant"
+    default_business_unit = "R&D / Product"
+    default_intended_use = (
+        "Support internal testing of image triage recommendations for medical imaging workflows."
+    )
+    default_deployment_stage = "Prototype"
+    default_data_sensitivity = "Sensitive personal data"
+    default_provider_type = "Internal model"
+    default_reviewer_name = "Hugo Choiral"
+else:
+    default_ai_system_name = ""
+    default_business_unit = ""
+    default_intended_use = ""
+    default_deployment_stage = "Idea / concept"
+    default_data_sensitivity = "Low"
+    default_provider_type = "Not determined"
+    default_reviewer_name = ""
+
 setup_col1, setup_col2 = st.columns([1, 2])
 
 with setup_col1:
     st.markdown("#### AI System Classification")
+    if st.button("Load sample medical AI review", use_container_width=True):
+        st.session_state.demo_mode = True
 
     selected_system_type = st.selectbox(
         "Choose the type of AI system to review:",
-        AI_SYSTEM_TYPES
+        AI_SYSTEM_TYPES,
+        index=AI_SYSTEM_TYPES.index("Medical AI system") if st.session_state.demo_mode else 0
     )
 
     st.markdown(
@@ -211,60 +236,72 @@ with setup_col2:
     with st.expander("Add AI system metadata", expanded=True):
         ai_system_name = st.text_input(
             "AI system name",
+            value=default_ai_system_name,
             placeholder="Example: Clinical decision support prototype"
         )
 
         business_unit = st.text_input(
             "Business unit / department",
+            value=default_business_unit,
             placeholder="Example: R&D, Legal, Product, HR, Compliance"
         )
 
         intended_use = st.text_area(
             "Intended use",
+            value=default_intended_use,
             placeholder="Describe how the AI system is expected to be used."
         )
 
+        deployment_stage_options = [
+            "Idea / concept",
+            "Prototype",
+            "Internal testing",
+            "Pilot",
+            "Production",
+            "Post-deployment monitoring"
+        ]
+
         deployment_stage = st.selectbox(
             "Deployment stage",
-            [
-                "Idea / concept",
-                "Prototype",
-                "Internal testing",
-                "Pilot",
-                "Production",
-                "Post-deployment monitoring"
-            ]
+            deployment_stage_options,
+            index=deployment_stage_options.index(default_deployment_stage)
         )
+
+        data_sensitivity_options = [
+            "Low",
+            "Medium",
+            "High",
+            "Sensitive personal data",
+            "Confidential business data"
+        ]
 
         data_sensitivity = st.selectbox(
             "Data sensitivity",
-            [
-                "Low",
-                "Medium",
-                "High",
-                "Sensitive personal data",
-                "Confidential business data"
-            ]
+            data_sensitivity_options,
+            index=data_sensitivity_options.index(default_data_sensitivity)
         )
+
+        provider_type_options = [
+            "Internal model",
+            "External provider",
+            "Open-source model",
+            "Hybrid / multiple providers",
+            "Not determined"
+        ]
 
         provider_type = st.selectbox(
             "Provider type",
-            [
-                "Internal model",
-                "External provider",
-                "Open-source model",
-                "Hybrid / multiple providers",
-                "Not determined"
-            ]
+            provider_type_options,
+            index=provider_type_options.index(default_provider_type)
         )
 
         reviewer_name = st.text_input(
             "Reviewer name",
+            value=default_reviewer_name,
             placeholder="Example: Hugo Choiral"
         )
 
         review_date = st.date_input("Review date")
-
 
 system_metadata = {
     "AI system name": ai_system_name,
